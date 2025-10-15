@@ -6,7 +6,7 @@
 /*   By: hanebaro <hanebaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:22:25 by hanebaro          #+#    #+#             */
-/*   Updated: 2025/10/14 22:49:08 by hanebaro         ###   ########.fr       */
+/*   Updated: 2025/10/15 20:10:51 by hanebaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,27 +61,98 @@ bool BitcoinExchange::isvaliDate(const std::string &date) const
     return (true);
 }
 
-bool BitcoinExchange::isvalidValue(float value) const
-{
-    return value >= 0 && value <= 1000;
-}
+// bool BitcoinExchange::isvalidValue(float value) const
+// {
+//     return (value >= 0 && value <= 1000);
+// }
 
 float BitcoinExchange::findAmount(const std::string &date) const
 {
-    
+    std::map<std::string, float>::const_iterator it = database.upper_bound(date);
+    if (it == database.begin())
+        return (-1);
+    --it;
+    return it->second;   
 }
 
 bool BitcoinExchange::reaDatabase(const std::string& filename)
 {
-    
+    std::ifstream file(filename.c_str());
+    if(!file.is_open())
+    {
+        std::cerr << "Error: could not open " << filename << " file." << std::endl;
+        return(false);
+    }
+    std::string line;
+    std::getline(file, line);
+    while(std::getline(file, line))
+    {
+        size_t pos = line.find(',');
+        if(pos == std::string::npos)
+            continue;
+        std::string date = line.substr(0,pos);
+        std::string strVal = line.substr(pos + 1);
+        float val = std::atof(strVal.c_str());
+        database[date] = val;
+        // add parsing
+    }
+    file.close();
+    return(true);
 }
 
 void BitcoinExchange::InputFile(const std::string& filename)
 {
-    
+    std::ifstream file(filename.c_str());
+
+    if(!file.is_open())
+    {
+        std::cerr << "Error: could not open " << filename << " file" << std::endl;
+        return;
+    }
+    std::string line;
+    std::getline(file, line); // Ignorer l'en-tête si présent; je peut la suppr
+    while(std::getline(file, line))
+    {
+        size_t pos = line.find('|');//why size_t
+        if(pos == std::string::npos)
+        {
+            std::cerr << "Error: bad input => " << line << std::endl;
+            continue;
+        }
+        std::string date = line.substr(0, pos - 1);
+        std::string strVal = line.substr(pos + 2);// verif pos + 2 and pos -1
+        
+        if (!isvaliDate(date))
+        {
+            std::cerr << "Error: bad input => " << date << std::endl;
+            continue;
+        }
+        char *endptr;
+        float val = std::strtof(strVal.c_str(), &endptr);
+        if(*endptr != '\0' && *endptr != '\n')
+        {
+            std::cerr << "Error: bad input => " << line << std::endl;
+            continue;
+        }
+        if (val < 0)
+        {
+            std::cerr << "Error: not a positive number." << std::endl;
+            continue;
+        }
+        if (val > 1000)
+        {
+            std::cerr << "Error: too large a number." << std::endl;
+            continue;
+        }
+        float amount = findAmount(date);
+        if(amount < 0)
+        {
+            std::cerr << "Error: no data available for this date." << std::endl;
+            continue;
+        }
+        std::cout << date << " => " << val << " = " << (val * amount) << std::endl;
+    }
+    file.close();
 }
 
-BitcoinExchange::~BitcoinExchange()
-{
-    
-}
+BitcoinExchange::~BitcoinExchange() {}
