@@ -47,9 +47,12 @@ public:
     int binaryInsert(std::deque<int>& target, int value);
 
     // Fonction de tri principale pour les deux conteneurs
-    void fordJohnsonSort(std::vector<int>& data);
-    void fordJohnsonSort(std::deque<int>& data);
+    // void fordJohnsonSort(std::vector<int>& data);
+    // void fordJohnsonSort(std::deque<int>& data);
 
+    template <typename T>
+    void ford_johnson_algo(T& data);
+    
     // Constructeurs / Destructeur
     PmergeMe();
     PmergeMe(const PmergeMe& other);
