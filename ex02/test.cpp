@@ -250,3 +250,207 @@ void PmergeMe::sortAndDisplayResults() {
     std::cout << "Time to process a range of " << dequeData.size() 
               << " elements with std::deque  : " << timeDeque << " us" << std::endl;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+std::vector<int> PmergeMe::getInsertionOrder(int pend_size)
+{
+    if (pend_size <= 0)
+        return (std::vector<int>());
+    
+    std::vector<int> jacobsthal = generateJacobsthal(pend_size);
+    std::vector<int> order;
+    std::vector<bool> used(pend_size, false);
+
+    used[0] = true;
+
+    if (pend_size > 1)
+    {
+        order.push_back(1);
+        used[1] = true;
+    }
+
+    for (size_t i = 2; i < jacobsthal.size(); i++)
+    {
+        int jacob_idx = jacobsthal[i];
+        int prev_jacob = jacobsthal[i - 1];
+
+        if (jacob_idx < pend_size && !used[jacob_idx])
+        {
+            order.push_back(jacob_idx);
+            used[jacob_idx] = true;
+        }
+
+        for (int j = std::min(jacob_idx - 1, pend_size - 1); j > prev_jacob; j--)
+        {
+            if (!used[j])
+            {
+                order.push_back(j);
+                used[j] = true;
+            }
+        }
+    }
+
+    // ✅ CORRECTION : Décroissant !
+    for (int i = pend_size - 1; i >= 1; i--)
+    {
+        if (!used[i])
+            order.push_back(i);
+    }
+
+    return order;
+}
+
+
+
+template <typename T>
+void PmergeMe::fordJohnsonSort(T& data)
+{
+    int n = static_cast<int>(data.size());
+    if(n <= 1)
+        return;
+    
+    int extra_var = -1;
+    if(n % 2 == 1)
+    {
+        extra_var = data[n - 1];
+        n--;
+    }
+
+    std::vector<std::pair<int, int> > pairs;
+    for(int i = 0; i < n; i += 2)
+    {
+        int a = data[i];
+        int b = data[i + 1];
+
+        if(a > b)
+            pairs.push_back(std::make_pair(a, b));
+        else
+            pairs.push_back(std::make_pair(b, a));
+    }
+
+    T main_chain;
+    for(size_t i = 0; i < pairs.size(); i++)
+        main_chain.push_back(pairs[i].first);
+
+    if(main_chain.size() > 1)
+        fordJohnsonSort(main_chain);
+    
+    T pend_chain;
+    for(size_t i = 0; i < main_chain.size(); i++)
+    {
+        for(size_t j = 0; j < pairs.size(); j++)
+        {
+            if(pairs[j].first == main_chain[i])
+            {
+                pend_chain.push_back(pairs[j].second);
+                break;
+            }
+        }
+    }
+
+    if(extra_var != -1)
+        pend_chain.push_back(extra_var);
+
+    T final_chain;
+    if(!pend_chain.empty())
+        final_chain.push_back(pend_chain[0]);
+
+    for(size_t i = 0; i < main_chain.size(); i++)
+        final_chain.push_back(main_chain[i]);
+
+    if(pend_chain.size() > 1)
+    {
+        std::vector<int> order = this->getInsertionOrder(static_cast<int>(pend_chain.size()) - 1);
+        
+        // ✅ VOTRE CODE EST PARFAIT TEL QUEL !
+        for(size_t i = 0; i < order.size(); i++)
+        {
+            int pend_idx = order[i];
+            int value_to_insert = pend_chain[pend_idx];
+            
+            // std::upper_bound fait TOUT automatiquement !
+            binaryInsert(final_chain, value_to_insert);
+        }
+    }
+    
+    data = final_chain;
+}
+
