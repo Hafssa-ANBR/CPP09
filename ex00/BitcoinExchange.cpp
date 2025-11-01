@@ -6,7 +6,7 @@
 /*   By: hanebaro <hanebaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:22:25 by hanebaro          #+#    #+#             */
-/*   Updated: 2025/10/15 20:10:51 by hanebaro         ###   ########.fr       */
+/*   Updated: 2025/10/29 17:31:03 by hanebaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ bool BitcoinExchange::isvaliDate(const std::string &date) const
 float BitcoinExchange::findAmount(const std::string &date) const
 {
     std::map<std::string, float>::const_iterator it = database.upper_bound(date);
+    std::cout << "Debug: upper_bound for date " << date << " found " << (it != database.end() ? it->first : "end") << std::endl;
     if (it == database.begin())
         return (-1);
     --it;
