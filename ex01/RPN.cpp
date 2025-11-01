@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "RPN.hpp"
-
+#include <stdexcept>
 RPN::RPN() {}
 
 RPN::RPN(const RPN &cpy)
@@ -95,3 +95,4 @@ int RPN::evaluate(const std::string& expression)
         throw std::runtime_error("Error");
     return(operands.top());
 }
+
