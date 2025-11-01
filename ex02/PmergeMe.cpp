@@ -286,7 +286,6 @@ std::vector<int> PmergeMe::generateJacobsthal(int max_val)
             break;
         jacobsthal.push_back(static_cast<int>(next_j));
     }
-    std::cout << "size    " << jacobsthal.size() << std::endl;
     return (jacobsthal);
 }
 
@@ -313,12 +312,6 @@ std::vector<int> PmergeMe::getInsertionOrder(int pend_size)
 
     // Le premier élément (index 0) est déjà dans la chaîne principale
     insert[0] = true;
-    std::cout << jacobsthal[0];
-    std::cout << jacobsthal[1];
-    std::cout << jacobsthal[2];
-    std::cout << jacobsthal[3];
-    std::cout << jacobsthal[4];
-    std::cout << jacobsthal[5] << std::endl;
 
     // Ajouter l'élément à l'index 1 en premier
     if (pend_size >= 1)
@@ -335,11 +328,9 @@ std::vector<int> PmergeMe::getInsertionOrder(int pend_size)
             idx_jacob = pend_size;
             
         int prev_jacob = jacobsthal[i - 1];
-        std::cout << jacobsthal.size() <<  "jacob    " << jacobsthal[i] << std::endl;
         // Insérer en ordre décroissant entre prev_jacob et idx_jacob
         for (int j = idx_jacob; j > prev_jacob; j--)
         {
-            std::cout << j << std::endl;
             if (j <= pend_size && !insert[j])
             {
                 order.push_back(j);
@@ -347,7 +338,6 @@ std::vector<int> PmergeMe::getInsertionOrder(int pend_size)
             }
         }
     }
-    std::cout << "mafhemt ta kheriya" << std::endl;
     // Ajouter les éléments restants
     for (int i = 1; i <= pend_size; i++)
     {
@@ -462,18 +452,32 @@ bool PmergeMe::parseInput(int argc, char** argv)
     return (!vectorData.empty());
 }
 
+// void PmergeMe::displaySequence(const std::vector<int>& arr, const std::string& prefix) const
+// {
+//     std::cout << prefix;
+    
+//     for (size_t i = 0; i < arr.size(); i++) {
+//         std::cout << arr[i];
+//         if (i < arr.size() - 1)
+//             std::cout << " ";
+//     }
+//     std::cout << std::endl;
+// }
+
 void PmergeMe::displaySequence(const std::vector<int>& arr, const std::string& prefix) const
 {
     std::cout << prefix;
-    
-    for (size_t i = 0; i < arr.size(); i++) {
+    size_t limit = arr.size() > 5 ? 4 : arr.size(); // change 4 with 5
+    // size_t limit = arr.size(); // change 4 with 5
+    for (size_t i = 0; i < limit; i++) {
         std::cout << arr[i];
-        if (i < arr.size() - 1)
+        if (i < limit - 1)
             std::cout << " ";
     }
+    if (arr.size() > 5)
+        std::cout << " [...]";
     std::cout << std::endl;
-}
-
+}   
 void PmergeMe::sortAndDisplayResults()
 {
     displaySequence(vectorData, "Before: ");
