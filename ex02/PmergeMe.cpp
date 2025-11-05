@@ -6,7 +6,7 @@
 /*   By: hanebaro <hanebaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 17:49:50 by hanebaro          #+#    #+#             */
-/*   Updated: 2025/11/01 16:55:14 by hanebaro         ###   ########.fr       */
+/*   Updated: 2025/11/05 10:43:39 by hanebaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ std::vector<int> PmergeMe::getInsertionOrder(int pend_size)
             }
         }
     }
-    for (int i = 1; i <= pend_size; i++)
+    for (int i = pend_size; i >= 1; i--)
     {
         if (!insert[i])
             order.push_back(i);
@@ -179,7 +179,7 @@ void PmergeMe::ford_johnson_algo(T& data)
 
     if(extra_var != -1)
         pend_chain.push_back(extra_var);
-
+    std::cout << "/n Pend chain size: " << pend_chain.size() << std::endl;
     T final_chain;
     
     // Insérer le premier élément de pend_chain (il est toujours plus petit que main_chain[0])
@@ -194,7 +194,8 @@ void PmergeMe::ford_johnson_algo(T& data)
     if(pend_chain.size() > 1)
     {
         std::vector<int> order = this->getInsertionOrder(static_cast<int>(pend_chain.size()) - 1);
-        
+        for(size_t i = 0; i < order.size(); i++)
+            std::cout << "Order[" << i << "] = " << order[i] << std::endl;
         for(size_t i = 0; i < order.size(); i++)
         {
             int value_to_insert = pend_chain[order[i]];

@@ -6,7 +6,7 @@
 /*   By: hanebaro <hanebaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:22:25 by hanebaro          #+#    #+#             */
-/*   Updated: 2025/10/29 17:31:03 by hanebaro         ###   ########.fr       */
+/*   Updated: 2025/11/02 15:13:47 by hanebaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@ bool BitcoinExchange::isvaliDate(const std::string &date) const
     }
     // Extraire année, mois, jour
     int year = std::atoi(date.substr(0, 4).c_str());
+    std::cout << date.substr(0, 4).c_str() << std::endl;
     int month = std::atoi(date.substr(5, 2).c_str());
+    std::cout << date.substr(5, 2).c_str() << std::endl;
     int day = std::atoi(date.substr(8, 2).c_str());
+    std::cout << date.substr(8, 2).c_str() << std::endl;
     
     // Validation basique
     if (year < 1000 || year > 9999)
